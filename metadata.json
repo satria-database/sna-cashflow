@@ -1,0 +1,6 @@
+{
+  "name": "Terrava - Paylater & Expense Manager",
+  "description": "Aplikasi manajemen cicilan paylater, pembukuan pengeluaran, jadwal & perawatan aset/servis berkala, kalender tagihan, dan settlement mutasi bank.",
+  "requestFramePermissions": ["notifications"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
