@@ -4,7 +4,6 @@ import { UserProfile } from '../types';
 import { 
   ShieldCheck, 
   ArrowRight,
-  Lock,
   Mail,
   User,
   KeyRound,
@@ -158,17 +157,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-between selection:bg-emerald-100 selection:text-emerald-900 font-sans">
       
-      {/* Header Bar */}
-      <header className="relative px-6 py-4 flex items-center justify-center border-b border-slate-200 bg-white/90 backdrop-blur-xs sticky top-0 z-10">
-        <TerramoraLogo size="sm" width={140} height={30} />
-        <div className="absolute right-6 flex items-center gap-2 max-sm:hidden">
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-            <Lock className="w-3.5 h-3.5 text-emerald-600" />
-            Portal Terenkripsi & Aman
-          </span>
-        </div>
-      </header>
-
       {/* Main Centered Login Section */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md space-y-5 animate-in fade-in duration-200">
