@@ -14,6 +14,7 @@ import {
   AlertCircle,
   ExternalLink,
   ChevronRight,
+  ChevronDown,
   TrendingDown,
   Sparkles,
   Check
@@ -61,6 +62,16 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
   const [editingItem, setEditingItem] = useState<PaylaterItem | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null);
   const [payoffTarget, setPayoffTarget] = useState<{ id: string; title: string } | null>(null);
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+  const toggleExpanded = (id: string) => {
+    setExpandedItems((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   // Form states for Add/Edit Modal
   const [title, setTitle] = useState('');
@@ -338,7 +349,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
 
       {/* Paylater Items Grid */}
       {filteredItems.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-2">
           {filteredItems.map((item) => {
             const providerInfo = PROVIDER_META[item.provider];
             const providerLabel = item.customProviderName || providerInfo.name;
@@ -346,11 +357,12 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
             const remainingTenors = Math.max(0, item.totalTenor - item.currentTenor);
             const remainingDebt = remainingTenors * item.monthlyInstallment;
             const daysLeft = item.dueDay - today;
+            const isExpanded = expandedItems.has(item.id);
 
             return (
               <div
                 key={item.id}
-                className={`bg-white rounded-2xl p-5 border transition-all shadow-xs hover:shadow-md flex flex-col justify-between ${
+                className={`bg-white rounded-xl p-3 border transition-all shadow-xs hover:shadow-md ${
                   item.isPaidThisMonth
                     ? 'border-emerald-200 bg-emerald-50/20'
                     : daysLeft < 0
@@ -360,8 +372,30 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
                         : 'border-slate-200'
                 }`}
               >
-                <div>
-                  
+                {/* Compact summary row */}
+                  <button
+                    type="button"
+                    onClick={() => toggleExpanded(item.id)}
+                    className="w-full flex items-center gap-2 text-left cursor-pointer"
+                    aria-expanded={isExpanded}
+                    aria-controls={`paylater-details-${item.id}`}
+                  >
+                    <span className={`shrink-0 text-[10px] font-bold px-2 py-1 rounded-md border ${providerInfo.badgeBg}`}>
+                      {providerLabel}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900">{item.title}</span>
+                    <span className="hidden sm:flex shrink-0 items-center gap-1 text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-1 rounded-md">
+                      <Calendar className="w-3 h-3" /> Tgl {item.dueDay}
+                    </span>
+                    {item.isPaidThisMonth ? (
+                      <span className="shrink-0 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded-md">Lunas</span>
+                    ) : daysLeft < 0 ? (
+                      <span className="shrink-0 text-[10px] font-bold text-rose-700 bg-rose-100 px-2 py-1 rounded-md">Telat</span>
+                    ) : null}
+                    {isExpanded ? <ChevronDown className="w-4 h-4 shrink-0 text-slate-400" /> : <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />}
+                  </button>
+
+                  <div id={`paylater-details-${item.id}`} className={isExpanded ? 'mt-3' : 'hidden'}>
                   {/* Top row: Badge & Status */}
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border ${providerInfo.badgeBg}`}>
@@ -426,7 +460,6 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
                     </div>
                   </div>
 
-                </div>
 
                 {/* Bottom Actions Bar */}
                 <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
@@ -504,8 +537,8 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
                     </button>
                   </div>
 
+                  </div>
                 </div>
-
               </div>
             );
           })}
