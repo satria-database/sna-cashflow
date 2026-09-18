@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { TerramoraLogo } from './TerravaLogo';
 import { UserProfile } from '../types';
 import { 
@@ -16,7 +17,7 @@ interface LoginPageProps {
   onLogin: (profile: UserProfile) => void;
 }
 
-export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+export function LoginPage({ onLogin }: LoginPageProps) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -71,7 +72,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   };
 
   // Email/password authentication must succeed before the dashboard opens.
-  const handleEmailAuth = async (e: React.FormEvent) => {
+  const handleEmailAuth = async (e: FormEvent) => {
     e.preventDefault();
     const normalizedEmail = email.trim().toLowerCase();
 
@@ -397,4 +398,4 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
     </div>
   );
-};
+}
