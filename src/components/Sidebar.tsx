@@ -158,7 +158,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'ai' as const,
-      label: 'Terrava AI Advisor',
+      label: 'Terramora AI Advisor',
       icon: Sparkles,
       desc: 'Audit Finansial Pintar',
       isSpecial: true,
@@ -176,7 +176,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={() => handleNavClick('dashboard')}
           className="flex flex-col items-start focus:outline-none group cursor-pointer"
-          title="Terrava Dashboard"
+          title="Terramora Dashboard"
         >
           <div className="py-1 px-1 -ml-1 rounded-lg transition-transform group-hover:scale-[1.02]">
             <TerravaLogo

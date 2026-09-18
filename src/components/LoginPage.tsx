@@ -1,19 +1,14 @@
-import React, { useState } from 'react';
-import { TerravaLogo } from './TerravaLogo';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
+import { TerramoraLogo } from './TerravaLogo';
 import { UserProfile } from '../types';
 import { 
   ShieldCheck, 
-  Bell, 
-  PieChart, 
-  TrendingUp, 
-  ArrowRight, 
-  Lock,
+  ArrowRight,
   Mail,
   User,
   KeyRound,
-  AlertCircle,
-  CheckCircle2,
-  Database
+  AlertCircle
 } from 'lucide-react';
 import { getSupabaseClient } from '../lib/supabase';
 import { saveUserProfileToSupabase } from '../services/supabaseService';
@@ -22,7 +17,7 @@ interface LoginPageProps {
   onLogin: (profile: UserProfile) => void;
 }
 
-export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+export function LoginPage({ onLogin }: LoginPageProps) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -76,11 +71,18 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     }
   };
 
-  // Direct Email & Password / Instant Form Sign-In
-  const handleEmailAuth = async (e: React.FormEvent) => {
+  // Email/password authentication must succeed before the dashboard opens.
+  const handleEmailAuth = async (e: FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !email.includes('@')) {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail || !normalizedEmail.includes('@')) {
       setErrorMessage('Harap masukkan format alamat email yang valid.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setErrorMessage('Password wajib diisi dan minimal terdiri dari 6 karakter.');
       return;
     }
 
@@ -89,43 +91,49 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
     try {
       const supabase = getSupabaseClient();
-      if (supabase && password) {
-        // Optional Supabase Auth email login/signup
-        if (authMode === 'signin') {
-          await supabase.auth.signInWithPassword({
-            email: email.trim().toLowerCase(),
-            password: password,
-          }).catch(() => {});
-        } else {
-          await supabase.auth.signUp({
-            email: email.trim().toLowerCase(),
-            password: password,
-          }).catch(() => {});
-        }
+      if (!supabase) {
+        throw new Error('Layanan login belum terhubung. Silakan coba lagi setelah koneksi tersedia.');
       }
 
-      const derivedName = name.trim() || email.split('@')[0];
-      const formattedName = derivedName.charAt(0).toUpperCase() + derivedName.slice(1);
+      const { data, error } = authMode === 'signin'
+        ? await supabase.auth.signInWithPassword({ email: normalizedEmail, password })
+        : await supabase.auth.signUp({
+            email: normalizedEmail,
+            password,
+            options: {
+              emailRedirectTo: (import.meta as any).env?.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/auth/callback`,
+              data: { full_name: name.trim() || normalizedEmail.split('@')[0] },
+            },
+          });
 
+      if (error) {
+        if (error.message.toLowerCase().includes('confirm')) {
+          throw new Error('Email Anda belum dikonfirmasi. Silakan cek inbox dan klik tautan verifikasi.');
+        }
+        throw new Error('Email atau password tidak valid.');
+      }
+
+      if (!data.user) {
+        throw new Error('Akun belum aktif. Silakan cek email verifikasi Anda.');
+      }
+
+      const derivedName = name.trim() || data.user.user_metadata?.full_name || normalizedEmail.split('@')[0];
+      const formattedName = derivedName.charAt(0).toUpperCase() + derivedName.slice(1);
       const profile: UserProfile = {
-        id: `usr_${email.trim().toLowerCase().replace(/[^a-zA-Z0-9]/g, '_')}`,
+        id: data.user.id,
         name: formattedName,
-        email: email.trim().toLowerCase(),
+        email: normalizedEmail,
         avatarUrl: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(formattedName)}&backgroundColor=007a52,047857`,
         isLoggedIn: true,
-        provider: 'google',
-        joinedAt: new Date().toISOString(),
+        provider: 'email',
+        joinedAt: data.user.created_at || new Date().toISOString(),
       };
 
-      // Save user profile to Supabase
       await saveUserProfileToSupabase(profile).catch(() => {});
-
-      setTimeout(() => {
-        onLogin(profile);
-        setIsSigningIn(false);
-      }, 350);
+      onLogin(profile);
     } catch (err: any) {
-      setErrorMessage(err.message || 'Gagal masuk. Silakan periksa kembali email & password Anda.');
+      setErrorMessage(err?.message || 'Gagal masuk. Silakan periksa kembali email dan password Anda.');
+    } finally {
       setIsSigningIn(false);
     }
   };
@@ -150,32 +158,17 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-between selection:bg-emerald-100 selection:text-emerald-900 font-sans">
       
-      {/* Header Bar */}
-      <header className="px-6 py-4 flex items-center justify-between border-b border-slate-200 bg-white/90 backdrop-blur-xs sticky top-0 z-10">
-        <div className="flex items-center gap-3">
-          <TerravaLogo size="sm" width={140} height={28} />
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-            <Lock className="w-3.5 h-3.5 text-emerald-600" />
-            Portal Terenkripsi & Aman
-          </span>
-        </div>
-      </header>
-
       {/* Main Centered Login Section */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md space-y-5 animate-in fade-in duration-200">
           
           {/* Brand Presentation Card */}
           <div className="text-center space-y-2.5">
-            <div className="inline-flex justify-center mb-1">
-              <div className="p-3.5 bg-white rounded-2xl shadow-xs border border-slate-200">
-                <TerravaLogo size="lg" width={220} height={44} />
-              </div>
+            <div className="flex justify-center mb-1">
+              <TerramoraLogo size="lg" width={240} height={50} />
             </div>
             <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-              Masuk ke Akun Anda
+              Masuk ke Terramora
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
               Kelola tagihan paylater, pantau arus kas bulanan, dan simulasikan strategi bebas hutang.
@@ -278,7 +271,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-xs font-bold text-slate-700">
-                    Password / PIN (Opsional)
+                    Password
                   </label>
                 </div>
                 <div className="relative">
@@ -287,7 +280,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   </div>
                   <input
                     type="password"
-                    placeholder="Masukkan password atau PIN"
+                    placeholder="Masukkan password Anda"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900"
@@ -317,29 +310,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               </button>
             </div>
 
-          </div>
-
-          {/* Value Props */}
-          <div className="grid grid-cols-2 gap-2.5 text-left">
-            <div className="p-3 bg-white rounded-2xl border border-slate-200 shadow-2xs flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
-                <Bell className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="font-bold text-xs text-slate-900">Pengingat Tagihan</div>
-                <div className="text-[10px] text-slate-500">Notifikasi jatuh tempo</div>
-              </div>
-            </div>
-
-            <div className="p-3 bg-white rounded-2xl border border-slate-200 shadow-2xs flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
-                <Database className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="font-bold text-xs text-slate-900">Multi-User Cloud</div>
-                <div className="text-[10px] text-slate-500">Data terpisah tiap akun</div>
-              </div>
-            </div>
           </div>
 
         </div>
@@ -423,9 +393,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
       {/* Footer */}
       <footer className="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white/60">
-        <p>© {new Date().getFullYear()} Terrava — Paylater & Cash Flow Operating System. Terlindungi & Terenkripsi.</p>
+        <p>© {new Date().getFullYear()} Terramora — Paylater & Cash Flow Operating System. Terlindungi & Terenkripsi.</p>
       </footer>
 
     </div>
   );
-};
+}

@@ -349,7 +349,7 @@ export const SupabaseModal: React.FC<SupabaseModalProps> = ({
           {activeTab === 'tables' && (
             <div className="space-y-3">
               <div className="text-[11px] text-slate-600">
-                Berikut adalah 5 tabel yang dikelola secara otomatis oleh sistem Terrava:
+                Berikut adalah 5 tabel yang dikelola secara otomatis oleh sistem Terramora:
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
@@ -396,7 +396,7 @@ export const SupabaseModal: React.FC<SupabaseModalProps> = ({
         <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs">
           <div className="text-slate-500 flex items-center gap-1.5">
             <Database className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Terrava Multi-Storage Engine</span>
+            <span>Terramora Multi-Storage Engine</span>
           </div>
           <button
             onClick={onClose}

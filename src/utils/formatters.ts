@@ -141,9 +141,9 @@ export const INCOME_SOURCE_META: Record<
  */
 export const createGoogleCalendarUrl = (title: string, amount: number, dueDate: Date, providerName: string): string => {
   const formattedAmount = formatRupiah(amount);
-  const eventTitle = encodeURIComponent(`[Terrava] Bayar Tagihan ${providerName}: ${title} (${formattedAmount})`);
+  const eventTitle = encodeURIComponent(`[Terramora] Bayar Tagihan ${providerName}: ${title} (${formattedAmount})`);
   const details = encodeURIComponent(
-    `Pengingat Tagihan Paylater Terrava:\nBarang/Transaksi: ${title}\nProvider: ${providerName}\nNominal: ${formattedAmount}\n\nSegera lunasi sebelum jatuh tempo agar terhindar dari denda!`
+    `Pengingat Tagihan Paylater Terramora:\nBarang/Transaksi: ${title}\nProvider: ${providerName}\nNominal: ${formattedAmount}\n\nSegera lunasi sebelum jatuh tempo agar terhindar dari denda!`
   );
   
   // Format date YYYYMMDD
@@ -175,7 +175,7 @@ export const createWhatsAppReminderUrl = (title: string, amount: number, dueDay:
     `*Layanan:* ${providerName}\n` +
     `*Nominal:* ${formatRupiah(amount)}\n` +
     `*Status:* ${statusText}\n\n` +
-    `_Dicatat otomatis via Terrava Financial Manager_ 💳✨`;
+    `_Dicatat otomatis via Terramora Financial Manager_ 💳✨`;
 
   return `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
 };
@@ -193,11 +193,11 @@ export const downloadIcsCalendar = (title: string, amount: number, dueDate: Date
   const icsContent = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Terrava Paylater Manager//ID',
+    'PRODID:-//Terramora Paylater Manager//ID',
     'CALSCALE:GREGORIAN',
     'BEGIN:VEVENT',
     `SUMMARY:Bayar Tagihan ${providerName}: ${title} (${formattedAmount})`,
-    `DESCRIPTION:Pengingat Tagihan Terrava untuk ${title} sebesar ${formattedAmount}.`,
+    `DESCRIPTION:Pengingat Tagihan Terramora untuk ${title} sebesar ${formattedAmount}.`,
     `DTSTART;VALUE=DATE:${dateStr}`,
     `DTEND;VALUE=DATE:${dateStr}`,
     'STATUS:CONFIRMED',

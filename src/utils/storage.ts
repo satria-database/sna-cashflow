@@ -4,7 +4,7 @@
  */
 import { BankSettlement, AssetItem, MaintenanceSchedule, MaintenanceRecord } from '../types';
 
-const DB_NAME = 'TerravaFinDB';
+const DB_NAME = 'TerramoraFinDB';
 const DB_VERSION = 1;
 const STORE_SETTLEMENTS = 'bank_settlements';
 const STORE_GENERAL = 'app_data';

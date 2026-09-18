@@ -238,7 +238,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <span className="text-xs uppercase font-bold tracking-widest text-emerald-700">
-              Pusat Manajemen Paylater Terrava
+              Pusat Manajemen Paylater Terramora
             </span>
             <h2 className="text-2xl font-extrabold text-slate-900 mt-1">Daftar Tagihan & Cicilan Aktif</h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl">

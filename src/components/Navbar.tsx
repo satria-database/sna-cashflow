@@ -98,7 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     expenses: { title: 'Pengeluaran & Anggaran', subtitle: 'Catatan Belanja & Budget Planner' },
     calendar: { title: 'Kalender Finansial', subtitle: 'Jadwal Jatuh Tempo & Pengeluaran' },
     strategy: { title: 'Strategi Bebas Hutang', subtitle: 'Simulasi Debt Snowball & Avalanche' },
-    ai: { title: 'Terrava AI Smart Advisor', subtitle: 'Konsultan & Audit Kesehatan Finansial' },
+    ai: { title: 'Terramora AI Smart Advisor', subtitle: 'Konsultan & Audit Kesehatan Finansial' },
   };
 
   const currentMeta = pageTitles[activeTab] || pageTitles.dashboard;
