@@ -3,17 +3,12 @@ import { TerramoraLogo } from './TerravaLogo';
 import { UserProfile } from '../types';
 import { 
   ShieldCheck, 
-  Bell, 
-  PieChart, 
-  TrendingUp, 
-  ArrowRight, 
+  ArrowRight,
   Lock,
   Mail,
   User,
   KeyRound,
-  AlertCircle,
-  CheckCircle2,
-  Database
+  AlertCircle
 } from 'lucide-react';
 import { getSupabaseClient } from '../lib/supabase';
 import { saveUserProfileToSupabase } from '../services/supabaseService';
@@ -326,29 +321,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               </button>
             </div>
 
-          </div>
-
-          {/* Value Props */}
-          <div className="grid grid-cols-2 gap-2.5 text-left">
-            <div className="p-3 bg-white rounded-2xl border border-slate-200 shadow-2xs flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
-                <Bell className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="font-bold text-xs text-slate-900">Pengingat Tagihan</div>
-                <div className="text-[10px] text-slate-500">Notifikasi jatuh tempo</div>
-              </div>
-            </div>
-
-            <div className="p-3 bg-white rounded-2xl border border-slate-200 shadow-2xs flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
-                <Database className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="font-bold text-xs text-slate-900">Multi-User Cloud</div>
-                <div className="text-[10px] text-slate-500">Data terpisah tiap akun</div>
-              </div>
-            </div>
           </div>
 
         </div>
