@@ -164,11 +164,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-between selection:bg-emerald-100 selection:text-emerald-900 font-sans">
       
       {/* Header Bar */}
-      <header className="px-6 py-4 flex items-center justify-between border-b border-slate-200 bg-white/90 backdrop-blur-xs sticky top-0 z-10">
-        <div className="flex items-center gap-3">
-          <TerramoraLogo size="sm" width={140} height={28} />
-        </div>
-        <div className="flex items-center gap-2">
+      <header className="relative px-6 py-4 flex items-center justify-center border-b border-slate-200 bg-white/90 backdrop-blur-xs sticky top-0 z-10">
+        <TerramoraLogo size="sm" width={140} height={30} />
+        <div className="absolute right-6 flex items-center gap-2 max-sm:hidden">
           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
             <Lock className="w-3.5 h-3.5 text-emerald-600" />
             Portal Terenkripsi & Aman
@@ -182,13 +180,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           
           {/* Brand Presentation Card */}
           <div className="text-center space-y-2.5">
-            <div className="inline-flex justify-center mb-1">
-              <div className="p-3.5 bg-white rounded-2xl shadow-xs border border-slate-200">
-                <TerramoraLogo size="lg" width={220} height={44} />
-              </div>
+            <div className="flex justify-center mb-1">
+              <TerramoraLogo size="lg" width={240} height={50} />
             </div>
             <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-              Masuk ke Akun Anda
+              Masuk ke Terramora
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
               Kelola tagihan paylater, pantau arus kas bulanan, dan simulasikan strategi bebas hutang.
