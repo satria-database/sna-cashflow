@@ -331,7 +331,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <div className="p-4 rounded-xl bg-emerald-50/50 border border-emerald-100 text-xs text-slate-600 space-y-1">
                 <div className="font-bold text-emerald-900 flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-emerald-700" />
-                  <span>Keamanan Data & Privasi Terrava</span>
+                  <span>Keamanan Data & Privasi Terramora</span>
                 </div>
                 <p>
                   Sesi login Anda disimpan secara aman. Semua data pencatatan cicilan dan anggaran tetap terenkripsi dan dapat dihubungkan ke database pribadi Supabase Anda.
@@ -681,7 +681,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
         {/* Modal Footer */}
         <div className="pt-3 border-t border-slate-100 flex items-center justify-between shrink-0">
-          <span className="text-[11px] text-slate-400">Terrava OS • Versi 2.0</span>
+          <span className="text-[11px] text-slate-400">Terramora OS • Versi 2.0</span>
           <button
             onClick={onClose}
             className="px-5 py-2 text-xs font-bold text-white bg-[#007a52] hover:bg-[#006644] rounded-xl transition-colors cursor-pointer shadow-xs"

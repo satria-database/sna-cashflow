@@ -98,7 +98,7 @@ export interface UserProfile {
   email: string;
   avatarUrl?: string;
   isLoggedIn: boolean;
-  provider: 'google' | 'guest';
+  provider: 'google' | 'email' | 'guest';
   joinedAt?: string;
 }
 

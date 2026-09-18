@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TerravaLogo } from './TerravaLogo';
+import { TerramoraLogo } from './TerravaLogo';
 import { UserProfile } from '../types';
 import { 
   ShieldCheck, 
@@ -76,11 +76,18 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     }
   };
 
-  // Direct Email & Password / Instant Form Sign-In
+  // Email/password authentication must succeed before the dashboard opens.
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !email.includes('@')) {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail || !normalizedEmail.includes('@')) {
       setErrorMessage('Harap masukkan format alamat email yang valid.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setErrorMessage('Password wajib diisi dan minimal terdiri dari 6 karakter.');
       return;
     }
 
@@ -89,43 +96,49 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
     try {
       const supabase = getSupabaseClient();
-      if (supabase && password) {
-        // Optional Supabase Auth email login/signup
-        if (authMode === 'signin') {
-          await supabase.auth.signInWithPassword({
-            email: email.trim().toLowerCase(),
-            password: password,
-          }).catch(() => {});
-        } else {
-          await supabase.auth.signUp({
-            email: email.trim().toLowerCase(),
-            password: password,
-          }).catch(() => {});
-        }
+      if (!supabase) {
+        throw new Error('Layanan login belum terhubung. Silakan coba lagi setelah koneksi tersedia.');
       }
 
-      const derivedName = name.trim() || email.split('@')[0];
-      const formattedName = derivedName.charAt(0).toUpperCase() + derivedName.slice(1);
+      const { data, error } = authMode === 'signin'
+        ? await supabase.auth.signInWithPassword({ email: normalizedEmail, password })
+        : await supabase.auth.signUp({
+            email: normalizedEmail,
+            password,
+            options: {
+              emailRedirectTo: (import.meta as any).env?.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/auth/callback`,
+              data: { full_name: name.trim() || normalizedEmail.split('@')[0] },
+            },
+          });
 
+      if (error) {
+        if (error.message.toLowerCase().includes('confirm')) {
+          throw new Error('Email Anda belum dikonfirmasi. Silakan cek inbox dan klik tautan verifikasi.');
+        }
+        throw new Error('Email atau password tidak valid.');
+      }
+
+      if (!data.user) {
+        throw new Error('Akun belum aktif. Silakan cek email verifikasi Anda.');
+      }
+
+      const derivedName = name.trim() || data.user.user_metadata?.full_name || normalizedEmail.split('@')[0];
+      const formattedName = derivedName.charAt(0).toUpperCase() + derivedName.slice(1);
       const profile: UserProfile = {
-        id: `usr_${email.trim().toLowerCase().replace(/[^a-zA-Z0-9]/g, '_')}`,
+        id: data.user.id,
         name: formattedName,
-        email: email.trim().toLowerCase(),
+        email: normalizedEmail,
         avatarUrl: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(formattedName)}&backgroundColor=007a52,047857`,
         isLoggedIn: true,
-        provider: 'google',
-        joinedAt: new Date().toISOString(),
+        provider: 'email',
+        joinedAt: data.user.created_at || new Date().toISOString(),
       };
 
-      // Save user profile to Supabase
       await saveUserProfileToSupabase(profile).catch(() => {});
-
-      setTimeout(() => {
-        onLogin(profile);
-        setIsSigningIn(false);
-      }, 350);
+      onLogin(profile);
     } catch (err: any) {
-      setErrorMessage(err.message || 'Gagal masuk. Silakan periksa kembali email & password Anda.');
+      setErrorMessage(err?.message || 'Gagal masuk. Silakan periksa kembali email dan password Anda.');
+    } finally {
       setIsSigningIn(false);
     }
   };
@@ -153,7 +166,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       {/* Header Bar */}
       <header className="px-6 py-4 flex items-center justify-between border-b border-slate-200 bg-white/90 backdrop-blur-xs sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <TerravaLogo size="sm" width={140} height={28} />
+          <TerramoraLogo size="sm" width={140} height={28} />
         </div>
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
@@ -171,7 +184,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           <div className="text-center space-y-2.5">
             <div className="inline-flex justify-center mb-1">
               <div className="p-3.5 bg-white rounded-2xl shadow-xs border border-slate-200">
-                <TerravaLogo size="lg" width={220} height={44} />
+                <TerramoraLogo size="lg" width={220} height={44} />
               </div>
             </div>
             <h1 className="text-2xl font-black text-slate-900 tracking-tight">
@@ -278,7 +291,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-xs font-bold text-slate-700">
-                    Password / PIN (Opsional)
+                    Password
                   </label>
                 </div>
                 <div className="relative">
@@ -287,7 +300,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   </div>
                   <input
                     type="password"
-                    placeholder="Masukkan password atau PIN"
+                    placeholder="Masukkan password Anda"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900"
@@ -423,7 +436,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
       {/* Footer */}
       <footer className="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white/60">
-        <p>© {new Date().getFullYear()} Terrava — Paylater & Cash Flow Operating System. Terlindungi & Terenkripsi.</p>
+        <p>© {new Date().getFullYear()} Terramora — Paylater & Cash Flow Operating System. Terlindungi & Terenkripsi.</p>
       </footer>
 
     </div>

@@ -158,7 +158,7 @@ export const ReminderBanner: React.FC<ReminderBannerProps> = ({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="font-bold text-slate-900 text-sm sm:text-base">
-                  Pengingat Tagihan Otomatis Terrava
+                  Pengingat Tagihan Otomatis Terramora
                 </h3>
                 {overdueCount > 0 && (
                   <span className="bg-rose-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-full animate-pulse">

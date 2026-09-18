@@ -50,7 +50,7 @@ import { ExpenseManager } from './components/ExpenseManager';
 import { IncomeManager } from './components/IncomeManager';
 import { DebtPayoffSimulator } from './components/DebtPayoffSimulator';
 import { BillCalendarView } from './components/BillCalendarView';
-import { TerravaAIAdvisor } from './components/TerravaAIAdvisor';
+import { TerramoraAIAdvisor } from './components/TerravaAIAdvisor';
 import { SettingsModal } from './components/SettingsModal';
 import { GoogleAuthModal } from './components/GoogleAuthModal';
 import { AddTransactionModal } from './components/AddTransactionModal';
@@ -354,7 +354,7 @@ export default function App() {
         setNotificationPermission(res);
         if (res === 'granted') {
           showToast('Notifikasi browser berhasil diaktifkan!');
-          new Notification('Terrava Financial Manager', {
+          new Notification('Terramora Financial Manager', {
             body: 'Pengingat tagihan otomatis telah aktif untuk akun Anda.',
             icon: '/favicon.ico',
           });
@@ -370,12 +370,12 @@ export default function App() {
   // Test Notification
   const handleTestNotification = () => {
     if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-      new Notification('🔔 [Tes Terrava] Tagihan Paylater Jatuh Tempo', {
+      new Notification('🔔 [Tes Terramora] Tagihan Paylater Jatuh Tempo', {
         body: 'Cicilan tagihan jatuh tempo dalam waktu dekat. Pastikan saldo tercukupi!',
       });
       showToast('Tes notifikasi browser terkirim!');
     } else {
-      showToast('🔔 [Pengingat Terrava] Segera lunasi tagihan paylater sebelum jatuh tempo!');
+      showToast('🔔 [Pengingat Terramora] Segera lunasi tagihan paylater sebelum jatuh tempo!');
     }
   };
 
@@ -699,7 +699,7 @@ export default function App() {
         if (parsed.schedules) setSchedules(parsed.schedules);
         if (parsed.maintenanceRecords) setMaintenanceRecords(parsed.maintenanceRecords);
 
-        showToast('Data backup Terrava berhasil diimpor & disinkronkan!');
+        showToast('Data backup Terramora berhasil diimpor & disinkronkan!');
       } catch (err) {
         showToast('Gagal membaca file backup JSON. Pastikan format valid.');
       }
@@ -944,14 +944,14 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Tips Terrava AI */}
+                  {/* Tips Terramora AI */}
                   <div className="bg-emerald-50/70 border border-emerald-100/90 rounded-2xl p-4.5 space-y-2.5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
                           <Sparkles className="w-3.5 h-3.5" />
                         </div>
-                        <span className="font-bold text-slate-900 text-xs">Tips Terrava AI</span>
+                        <span className="font-bold text-slate-900 text-xs">Tips Terramora AI</span>
                       </div>
                       <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-600 text-white shadow-2xs">
                         AI
@@ -1076,10 +1076,10 @@ export default function App() {
             </div>
           )}
 
-          {/* View 6: Terrava AI Financial Consultant */}
+          {/* View 6: Terramora AI Financial Consultant */}
           {activeTab === 'ai' && (
             <div className="w-full">
-              <TerravaAIAdvisor
+              <TerramoraAIAdvisor
                 paylaterItems={paylaterItems}
                 expenses={currentMonthExpenses}
                 incomes={currentMonthIncomes}

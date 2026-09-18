@@ -14,7 +14,7 @@ import {
 import { CategoryBudget, ExpenseItem, IncomeItem, PaylaterItem } from '../types';
 import { formatRupiah } from '../utils/formatters';
 
-interface TerravaAIAdvisorProps {
+interface TerramoraAIAdvisorProps {
   paylaterItems: PaylaterItem[];
   expenses: ExpenseItem[];
   incomes: IncomeItem[];
@@ -23,7 +23,7 @@ interface TerravaAIAdvisorProps {
   currentMonth: number;
 }
 
-export const TerravaAIAdvisor: React.FC<TerravaAIAdvisorProps> = ({
+export const TerramoraAIAdvisor: React.FC<TerramoraAIAdvisorProps> = ({
   paylaterItems,
   expenses,
   incomes,
@@ -74,12 +74,12 @@ export const TerravaAIAdvisor: React.FC<TerravaAIAdvisorProps> = ({
 2. Total beban paylater Anda adalah **${formatRupiah(totalPaylaterMonthly)}/bulan**. Jangan tergoda promo voucher diskon yang mengharuskan metode pembayaran cicilan tenor panjang.
 3. Selalu alokasikan tabungan dana darurat di awal gajian (Pay Yourself First) minimal 10% dari pemasukan.`;
       } else if (q.includes('snowball') || q.includes('avalanche') || q.includes('cepat lunas')) {
-        response = `🎯 **Rekomendasi Pelunasan Terrava:**
+        response = `🎯 **Rekomendasi Pelunasan Terramora:**
 - Jika Anda membutuhkan **dorongan motivasi cepat**: Gunakan metode **Debt Snowball**. Lunasi tagihan dengan sisa saldo terkecil terlebih dahulu agar jumlah daftar tagihan berkurang cepat.
 - Jika Anda ingin **menghemat total uang bunga**: Gunakan metode **Debt Avalanche**. Prioritaskan tagihan dengan bunga % tertinggi.
 - Alokasikan sisa saldo bersih Anda (${formatRupiah(Math.max(0, netCashFlow))}) sebesar 50% untuk mempercepat cicilan prioritas #1.`;
       } else {
-        response = `🤖 **Analisis Kesehatan Finansial Terrava AI:**
+        response = `🤖 **Analisis Kesehatan Finansial Terramora AI:**
 - **Pemasukan:** ${formatRupiah(totalIncome)}
 - **Beban Paylater Bulanan:** ${formatRupiah(totalPaylaterMonthly)} (DSR: ${dsr.toFixed(1)}%)
 - **Pengeluaran Operasional:** ${formatRupiah(totalExpense)}
@@ -106,7 +106,7 @@ Status keseluruhan Anda berada di zona **${dsr <= 30 ? 'AMAN & SEHAT' : dsr <= 4
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs uppercase font-bold tracking-widest text-emerald-700">
-                  Terrava Smart Advisor
+                  Terramora Smart Advisor
                 </span>
                 <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full">
                   AI Powered
@@ -226,7 +226,7 @@ Status keseluruhan Anda berada di zona **${dsr <= 30 ? 'AMAN & SEHAT' : dsr <= 4
           <div className="mt-4 p-5 bg-emerald-50/80 text-slate-900 rounded-2xl border border-emerald-200 shadow-xs animate-fadeIn">
             <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs uppercase tracking-wider mb-2">
               <Bot className="w-4 h-4 text-emerald-700" />
-              <span>Hasil Analisis Konsultan Finansial Terrava:</span>
+              <span>Hasil Analisis Konsultan Finansial Terramora:</span>
             </div>
             <div className="text-sm leading-relaxed whitespace-pre-line text-slate-800">
               {customAdvice}
