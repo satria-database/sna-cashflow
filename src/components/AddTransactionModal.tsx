@@ -35,6 +35,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
   const [plTotalTenor, setPlTotalTenor] = useState('6');
   const [plCurrentTenor, setPlCurrentTenor] = useState('1');
   const [plDueDay, setPlDueDay] = useState('5');
+  const [plStartMonth, setPlStartMonth] = useState(`${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`);
   const [plNotes, setPlNotes] = useState('');
 
   // Expense form states
@@ -68,7 +69,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
       currentTenor: parseInt(plCurrentTenor, 10) || 1,
       dueDay: parseInt(plDueDay, 10) || 1,
       notes: plNotes.trim(),
-      startDate: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`,
+      startDate: plStartMonth,
       isPaidThisMonth: false,
     });
     onClose();
@@ -254,6 +255,24 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
                   <option value="24">24 Bulan</option>
                 </select>
               </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Bulan Mulai Tagihan <span className="text-rose-500">*</span>
+              </label>
+              <select
+                required
+                value={plStartMonth}
+                onChange={(e) => setPlStartMonth(e.target.value)}
+                className="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
+                {Array.from({ length: 24 }, (_, index) => {
+                  const date = new Date(currentYear, currentMonth + index - 6, 1);
+                  const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                  return <option key={value} value={value}>{date.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}</option>;
+                })}
+              </select>
             </div>
 
             <div>
