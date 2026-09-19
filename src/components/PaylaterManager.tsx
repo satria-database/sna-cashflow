@@ -346,7 +346,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
             return (
               <div
                 key={item.id}
-                className={`bg-white rounded-xl p-4 border transition-all shadow-xs hover:shadow-md ${
+                className={`bg-white rounded-xl p-3 border transition-all shadow-xs hover:shadow-md ${
                   item.isPaidThisMonth
                     ? 'border-emerald-200 bg-emerald-50/20'
                     : daysLeft < 0
@@ -375,44 +375,34 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
                     )}
                   </div>
 
-                  <div className="mt-3">
-                  {/* Notes */}
-                  {item.notes && (
-                    <p className="text-xs text-slate-500 -mt-1 mb-3 line-clamp-1">{item.notes}</p>
-                  )}
+                  <div className="mt-2">
+                    {item.notes && (
+                      <p className="text-[11px] text-slate-500 mb-2 line-clamp-1">{item.notes}</p>
+                    )}
 
-                  {/* Pricing Details */}
-                  <div className="mt-4 p-3.5 bg-slate-50 rounded-xl border border-slate-100 grid grid-cols-2 gap-3">
-                    <div>
-                      <span className="text-[11px] text-slate-500 font-medium">Tagihan / Bulan</span>
-                      <div className="text-base font-extrabold text-slate-900 mt-0.5">
-                        {formatRupiah(item.monthlyInstallment)}
+                    {/* Compact always-visible summary */}
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs">
+                      <div>
+                        <span className="text-[10px] text-slate-500 block">Tagihan / bulan</span>
+                        <strong className="text-sm text-slate-900">{formatRupiah(item.monthlyInstallment)}</strong>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-500 block">Sisa pokok</span>
+                        <strong className="text-sm text-amber-700">{formatRupiah(remainingDebt)}</strong>
+                      </div>
+                      <div className="min-w-[150px] flex-1 max-w-xs">
+                        <div className="flex items-center justify-between text-[10px] mb-1">
+                          <span className="text-slate-500">Tenor {item.currentTenor}/{item.totalTenor} bulan</span>
+                          <strong className="text-emerald-700">{progressPercent}%</strong>
+                        </div>
+                        <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-emerald-500 transition-all duration-500 rounded-full"
+                            style={{ width: `${progressPercent}%` }}
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div>
-                      <span className="text-[11px] text-slate-500 font-medium">Sisa Pokok Hutang</span>
-                      <div className="text-base font-bold text-amber-700 mt-0.5">
-                        {formatRupiah(remainingDebt)}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Tenor Progression Bar */}
-                  <div className="mt-4">
-                    <div className="flex items-center justify-between text-xs mb-1.5">
-                      <span className="text-slate-600 font-medium">
-                        Cicilan ke-<strong className="text-slate-900">{item.currentTenor}</strong> dari <strong>{item.totalTenor}</strong> bulan
-                      </span>
-                      <span className="font-bold text-emerald-700">{progressPercent}%</span>
-                    </div>
-                    <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 transition-all duration-500 rounded-full"
-                        style={{ width: `${progressPercent}%` }}
-                      />
-                    </div>
-                  </div>
-
 
                 {/* Bottom Actions Bar */}
                 <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
