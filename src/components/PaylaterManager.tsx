@@ -605,15 +605,21 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
               {/* Billing start month */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Mulai Tagihan <span className="text-rose-500">*</span>
+                  Bulan Mulai Tagihan <span className="text-rose-500">*</span>
                 </label>
-                <input
-                  type="month"
+                <select
                   required
                   value={startMonth}
                   onChange={(e) => setStartMonth(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
-                />
+                  className="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+                >
+                  {Array.from({ length: 24 }, (_, index) => {
+                    const date = new Date(currentYear, currentMonth + index - 6, 1);
+                    const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    const label = date.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+                    return <option key={value} value={value}>{label}</option>;
+                  })}
+                </select>
                 <p className="text-[11px] text-slate-500 mt-1">
                   Pilih bulan saat cicilan pertama mulai ditagihkan.
                 </p>
