@@ -67,6 +67,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
   const [totalTenor, setTotalTenor] = useState('6');
   const [currentTenor, setCurrentTenor] = useState('1');
   const [dueDay, setDueDay] = useState('5');
+  const [startMonth, setStartMonth] = useState(`${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`);
   const [interestRate, setInterestRate] = useState('0');
   const [adminFee, setAdminFee] = useState('0');
   const [notes, setNotes] = useState('');
@@ -107,6 +108,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
     setTotalTenor('6');
     setCurrentTenor('1');
     setDueDay('5');
+    setStartMonth(`${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`);
     setInterestRate('0');
     setAdminFee('0');
     setNotes('');
@@ -123,6 +125,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
     setTotalTenor(item.totalTenor.toString());
     setCurrentTenor(item.currentTenor.toString());
     setDueDay(item.dueDay.toString());
+    setStartMonth(item.startDate || `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`);
     setInterestRate((item.interestRate || 0).toString());
     setAdminFee((item.adminFee || 0).toString());
     setNotes(item.notes || '');
@@ -145,6 +148,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
         totalTenor: parseInt(totalTenor, 10) || 1,
         currentTenor: parseInt(currentTenor, 10) || 1,
         dueDay: parseInt(dueDay, 10) || 1,
+        startDate: startMonth || `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`,
         interestRate: parseFloat(interestRate) || 0,
         adminFee: parseFloat(adminFee) || 0,
         notes: notes.trim(),
@@ -159,10 +163,10 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
         totalTenor: parseInt(totalTenor, 10) || 1,
         currentTenor: parseInt(currentTenor, 10) || 1,
         dueDay: parseInt(dueDay, 10) || 1,
+        startDate: startMonth || `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`,
         interestRate: parseFloat(interestRate) || 0,
         adminFee: parseFloat(adminFee) || 0,
         notes: notes.trim(),
-        startDate: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`,
         isPaidThisMonth: false,
       });
     }
@@ -596,6 +600,23 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
                     ))}
                   </select>
                 </div>
+              </div>
+
+              {/* Billing start month */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Mulai Tagihan <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="month"
+                  required
+                  value={startMonth}
+                  onChange={(e) => setStartMonth(e.target.value)}
+                  className="w-full px-3.5 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">
+                  Pilih bulan saat cicilan pertama mulai ditagihkan.
+                </p>
               </div>
 
               {/* Amount & Tenor */}
