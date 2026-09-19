@@ -56,6 +56,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
   const [selectedProviderFilter, setSelectedProviderFilter] = useState<string>('all');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState<'all' | 'unpaid' | 'paid'>('all');
   const [editingItem, setEditingItem] = useState<PaylaterItem | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null);
   const [payoffTarget, setPayoffTarget] = useState<{ id: string; title: string } | null>(null);
   // Form states for Add/Edit Modal
@@ -130,7 +131,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
     setAdminFee((item.adminFee || 0).toString());
     setNotes(item.notes || '');
     setAutoCalculateMonthly(false);
-    setIsAddModalOpen(true);
+    setIsEditModalOpen(true);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -172,6 +173,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
     }
 
     setIsAddModalOpen(false);
+    setIsEditModalOpen(false);
   };
 
   // Filter items
@@ -506,7 +508,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
       )}
 
       {/* Add / Edit Paylater Modal */}
-      {isAddModalOpen && (
+      {(isAddModalOpen || isEditModalOpen) && (
         <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 my-8">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -522,7 +524,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
                 </div>
               </div>
               <button
-                onClick={() => setIsAddModalOpen(false)}
+                onClick={() => { setIsAddModalOpen(false); setIsEditModalOpen(false); }}
                 className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100"
               >
                 ✕
@@ -719,7 +721,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
               <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
                 <button
                   type="button"
-                  onClick={() => setIsAddModalOpen(false)}
+                  onClick={() => { setIsAddModalOpen(false); setIsEditModalOpen(false); }}
                   className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
                 >
                   Batal
