@@ -346,7 +346,7 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
             return (
               <div
                 key={item.id}
-                className={`bg-white rounded-xl p-3 border transition-all shadow-xs hover:shadow-md ${
+                className={`bg-white rounded-xl px-3 py-2 border transition-all shadow-xs hover:shadow-md ${
                   item.isPaidThisMonth
                     ? 'border-emerald-200 bg-emerald-50/20'
                     : daysLeft < 0
@@ -356,13 +356,14 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
                         : 'border-slate-200'
                 }`}
               >
-                {/* Always-visible card header */}
-                  <div className="flex items-start justify-between gap-3">
+                <div className="flex flex-col gap-2 md:grid md:grid-cols-[minmax(170px,1.15fr)_120px_120px_minmax(170px,1fr)_auto] md:items-center md:gap-5">
+                  {/* Identity */}
+                  <div className="min-w-0 flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <span className={`inline-flex text-[10px] font-bold px-2 py-1 rounded-md border ${providerInfo.badgeBg}`}>
                         {providerLabel}
                       </span>
-                      <h4 className="text-base font-bold text-slate-900 mt-2 truncate">{item.title}</h4>
+                      <h4 className="text-sm font-bold text-slate-900 mt-1 truncate">{item.title}</h4>
                     </div>
                     {item.isPaidThisMonth ? (
                       <span className="shrink-0 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded-md">Lunas</span>
@@ -375,37 +376,32 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
                     )}
                   </div>
 
-                  <div className="mt-2">
-                    {item.notes && (
-                      <p className="text-[11px] text-slate-500 mb-2 line-clamp-1">{item.notes}</p>
-                    )}
+                  {/* Amounts */}
+                  <div>
+                    <span className="text-[10px] text-slate-500 block">Tagihan / bulan</span>
+                    <strong className="text-sm text-slate-900">{formatRupiah(item.monthlyInstallment)}</strong>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-500 block">Sisa pokok</span>
+                    <strong className="text-sm text-amber-700">{formatRupiah(remainingDebt)}</strong>
+                  </div>
 
-                    {/* Compact always-visible summary */}
-                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs">
-                      <div>
-                        <span className="text-[10px] text-slate-500 block">Tagihan / bulan</span>
-                        <strong className="text-sm text-slate-900">{formatRupiah(item.monthlyInstallment)}</strong>
-                      </div>
-                      <div>
-                        <span className="text-[10px] text-slate-500 block">Sisa pokok</span>
-                        <strong className="text-sm text-amber-700">{formatRupiah(remainingDebt)}</strong>
-                      </div>
-                      <div className="min-w-[150px] flex-1 max-w-xs">
-                        <div className="flex items-center justify-between text-[10px] mb-1">
-                          <span className="text-slate-500">Tenor {item.currentTenor}/{item.totalTenor} bulan</span>
-                          <strong className="text-emerald-700">{progressPercent}%</strong>
-                        </div>
-                        <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-emerald-500 transition-all duration-500 rounded-full"
-                            style={{ width: `${progressPercent}%` }}
-                          />
-                        </div>
-                      </div>
+                  {/* Progress */}
+                  <div className="min-w-0">
+                    <div className="flex items-center justify-between text-[10px] mb-1">
+                      <span className="text-slate-500">Tenor {item.currentTenor}/{item.totalTenor} bulan</span>
+                      <strong className="text-emerald-700">{progressPercent}%</strong>
                     </div>
+                    <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-emerald-500 transition-all duration-500 rounded-full"
+                        style={{ width: `${progressPercent}%` }}
+                      />
+                    </div>
+                  </div>
 
-                {/* Bottom Actions Bar */}
-                <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+                {/* Actions */}
+                <div className="flex items-center justify-between gap-2 md:flex-col md:items-end md:justify-center">
                   
                   {/* Share & Calendar Quick Tools */}
                   <div className="flex items-center gap-1">
