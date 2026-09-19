@@ -5,16 +5,12 @@ import {
   Search, 
   Filter, 
   CheckCircle2, 
-  Clock, 
   Calendar, 
   Trash2, 
   Edit3, 
   Send, 
   Download, 
-  AlertCircle,
   ExternalLink,
-  ChevronRight,
-  ChevronDown,
   TrendingDown,
   Sparkles,
   Check
@@ -62,17 +58,6 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
   const [editingItem, setEditingItem] = useState<PaylaterItem | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null);
   const [payoffTarget, setPayoffTarget] = useState<{ id: string; title: string } | null>(null);
-  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
-
-  const toggleExpanded = (id: string) => {
-    setExpandedItems((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-
   // Form states for Add/Edit Modal
   const [title, setTitle] = useState('');
   const [provider, setProvider] = useState<PaylaterProvider>('spaylater');
@@ -357,12 +342,11 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
             const remainingTenors = Math.max(0, item.totalTenor - item.currentTenor);
             const remainingDebt = remainingTenors * item.monthlyInstallment;
             const daysLeft = item.dueDay - today;
-            const isExpanded = expandedItems.has(item.id);
 
             return (
               <div
                 key={item.id}
-                className={`bg-white rounded-xl p-3 border transition-all shadow-xs hover:shadow-md ${
+                className={`bg-white rounded-xl p-4 border transition-all shadow-xs hover:shadow-md ${
                   item.isPaidThisMonth
                     ? 'border-emerald-200 bg-emerald-50/20'
                     : daysLeft < 0
@@ -372,60 +356,29 @@ export const PaylaterManager: React.FC<PaylaterManagerProps> = ({
                         : 'border-slate-200'
                 }`}
               >
-                {/* Compact summary row */}
-                  <button
-                    type="button"
-                    onClick={() => toggleExpanded(item.id)}
-                    className="w-full flex items-center gap-2 text-left cursor-pointer"
-                    aria-expanded={isExpanded}
-                    aria-controls={`paylater-details-${item.id}`}
-                  >
-                    <span className={`shrink-0 text-[10px] font-bold px-2 py-1 rounded-md border ${providerInfo.badgeBg}`}>
-                      {providerLabel}
-                    </span>
-                    <span className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900">{item.title}</span>
-                    <span className="hidden sm:flex shrink-0 items-center gap-1 text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-1 rounded-md">
-                      <Calendar className="w-3 h-3" /> Tgl {item.dueDay}
-                    </span>
+                {/* Always-visible card header */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <span className={`inline-flex text-[10px] font-bold px-2 py-1 rounded-md border ${providerInfo.badgeBg}`}>
+                        {providerLabel}
+                      </span>
+                      <h4 className="text-base font-bold text-slate-900 mt-2 truncate">{item.title}</h4>
+                    </div>
                     {item.isPaidThisMonth ? (
                       <span className="shrink-0 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded-md">Lunas</span>
                     ) : daysLeft < 0 ? (
                       <span className="shrink-0 text-[10px] font-bold text-rose-700 bg-rose-100 px-2 py-1 rounded-md">Telat</span>
-                    ) : null}
-                    {isExpanded ? <ChevronDown className="w-4 h-4 shrink-0 text-slate-400" /> : <ChevronRight className="w-4 h-4 shrink-0 text-slate-400" />}
-                  </button>
-
-                  <div id={`paylater-details-${item.id}`} className={isExpanded ? 'mt-3' : 'hidden'}>
-                  {/* Top row: Badge & Status */}
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border ${providerInfo.badgeBg}`}>
-                      {providerLabel}
-                    </span>
-
-                    {/* Status Pill */}
-                    {item.isPaidThisMonth ? (
-                      <span className="flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Lunas Bulan Ini
-                      </span>
-                    ) : daysLeft < 0 ? (
-                      <span className="flex items-center gap-1 text-xs font-bold text-rose-700 bg-rose-100 px-2.5 py-1 rounded-lg animate-pulse">
-                        <AlertCircle className="w-3.5 h-3.5" /> Telat ({Math.abs(daysLeft)} hr lalu)
-                      </span>
-                    ) : daysLeft === 0 ? (
-                      <span className="flex items-center gap-1 text-xs font-bold text-rose-700 bg-rose-100 px-2.5 py-1 rounded-lg animate-pulse">
-                        <Clock className="w-3.5 h-3.5" /> Jatuh Tempo Hari Ini!
-                      </span>
                     ) : (
-                      <span className="flex items-center gap-1 text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg">
-                        <Calendar className="w-3.5 h-3.5" /> Tgl {item.dueDay} ({daysLeft} hr lagi)
+                      <span className="shrink-0 flex items-center gap-1 text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-1 rounded-md">
+                        <Calendar className="w-3 h-3" /> Tgl {item.dueDay}
                       </span>
                     )}
                   </div>
 
-                  {/* Title & Notes */}
-                  <h4 className="text-base font-bold text-slate-900">{item.title}</h4>
+                  <div className="mt-3">
+                  {/* Notes */}
                   {item.notes && (
-                    <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{item.notes}</p>
+                    <p className="text-xs text-slate-500 -mt-1 mb-3 line-clamp-1">{item.notes}</p>
                   )}
 
                   {/* Pricing Details */}
